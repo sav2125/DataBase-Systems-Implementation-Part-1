@@ -1,3 +1,47 @@
+In this project, we were be asked to implement an advanced kind of traversal method for in-memory search trees. For analytic 
+datasets that don’t need to support updates, we can optimize the tree data structure to eliminate pointers. Parent-child 
+relationships are implicit in the arrangement of the keys within nodes. Unlike what we’ve covered in class so far, we’re not 
+aiming to optimize I/O. Instead, we’re trying to optimize performance by reducing CPU-related latencies and by ultizing SIMD 
+capabilities of modern CPUs. The details of the advanced method we implemented are described in Section 3.5 of the reference
+document at http://www.cs.columbia.edu/~orestis/sigmod14I.pdf. We implemented the horizontal approach, using variations of the
+first code fragment from Section 3.5.1, and the code fragment in Section 3.5.2. We used the first method shown in Section 
+3.5.1 to search a node and extend it for multiple tree levels as explained in Section 3.5.2. There are three stages to the 
+project, outlined below. Our code is implemented in C.
+1 Part 1 (40 points). Due 4/11/2016
+Implement code in C to build a pointer-free tree structure as described in the reference document, with an array of keys for each tree level. The tree contains keys only, and the result of a search is the
+identity of the range to which the search key belongs. So if there are n keys, there will be n + 1 ranges numbered 0, . . . , n.
+(To do a real index traversal we would use the range identifier as an offset into an array of record-identifiers, but for this
+project we’ll omit that step, and ignore record-identifiers altogether.) To build this table, you’ll need to randomly generate 
+a set of unique 32-bit integer keys, sort them, and store them as outlined in the reference document. A parameter to our 
+method will be the fanout at each level specified as a list of integers on the command line, Assume that the fanout can be any integer
+between 2 and 17 inclusive, but we’ll be particularly interested in fanouts of 5, 9 and 17 as discussed in the
+reference document. If there are too many build keys for the given fanout, then we reported an error. If there are too few
+keys, so that when we built the tree the root node is empty (and a shallower tree would suffice), then we also reported an 
+error. If a tree node is not completely filled, you should pad it with extra keys containing the maximum representable number.
+For example, suppose we are trying to build a 2-level tree with a fanout of 4 (i.e., 3 keys per node)
+at each level. Suppose there are nine keys to put in the tree: 10, 20, 30, 40, 50, 60, 70, 80, 90. Start
+by filling the leaf level node with 3 keys, 10, 20, 30. The next key 40 then goes in the parent node.
+The next 3 keys 50, 60, 70 go in the next leaf node. Key 80 goes in the parent node. Key 90 goes in
+the leaf node. This last leaf node is partially full, so it is padded with two instances of MAXINT. The
+parent node is also partially full, so it is padded with one instance of MAXINT. So the final leaf level array
+is [10,20,30,50,60,70,90,MAXINT,MAXINT]. Note that the array has length 9, not 12. (Had there been
+more keys we may have needed to allocate 12 slots in the array rather than 9.) The root level array is
+[40,80,MAXINT]. Once we built the tree, for this stage of the project we will simply do a binary search within each
+node to locate the appropriate child node. A set of probes is randomly generated, and the output is the
+corresponding sequence of range identifiers. Your code should be invoked as:
+build K P 9 5 9
+to build a 3-level 9-5-9 tree, or
+build K P 9 5 5 9
+to build a 4-level 9-5-5-9 tree, etc. K is the number of keys used to build the tree, and P is the number of
+probes to perform. We will provide code to generate random sets of integers.
+1
+We implemented the method in three distinct phases to facilitate timing measurements. In phase
+1, the index should be built, and the probes loaded into an array of integers. In phase 2, the index is probed
+using binary search for each node and the range identifier of the match is appended to an array of output
+values. In phase 3, the output value array is written to stdout.
+
+
+
 DBSI Project 2.1
 Team Members : 
 Shivani Gupta (sg3296)
