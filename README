@@ -7,14 +7,16 @@ document at http://www.cs.columbia.edu/~orestis/sigmod14I.pdf. We implemented th
 first code fragment from Section 3.5.1, and the code fragment in Section 3.5.2. We used the first method shown in Section 
 3.5.1 to search a node and extend it for multiple tree levels as explained in Section 3.5.2. There are three stages to the 
 project, outlined below. Our code is implemented in C.
+
 1 Part 1 (40 points). Due 4/11/2016
-Implement code in C to build a pointer-free tree structure as described in the reference document, with an array of keys for each tree level. The tree contains keys only, and the result of a search is the
+Implement code in C to build a pointer-free tree structure as described in the reference document, with an array of keys for
+each tree level. The tree contains keys only, and the result of a search is the
 identity of the range to which the search key belongs. So if there are n keys, there will be n + 1 ranges numbered 0, . . . , n.
 (To do a real index traversal we would use the range identifier as an offset into an array of record-identifiers, but for this
 project we’ll omit that step, and ignore record-identifiers altogether.) To build this table, you’ll need to randomly generate 
 a set of unique 32-bit integer keys, sort them, and store them as outlined in the reference document. A parameter to our 
-method will be the fanout at each level specified as a list of integers on the command line, Assume that the fanout can be any integer
-between 2 and 17 inclusive, but we’ll be particularly interested in fanouts of 5, 9 and 17 as discussed in the
+method will be the fanout at each level specified as a list of integers on the command line, Assume that the fanout can be any
+integer between 2 and 17 inclusive, but we’ll be particularly interested in fanouts of 5, 9 and 17 as discussed in the
 reference document. If there are too many build keys for the given fanout, then we reported an error. If there are too few
 keys, so that when we built the tree the root node is empty (and a shallower tree would suffice), then we also reported an 
 error. If a tree node is not completely filled, you should pad it with extra keys containing the maximum representable number.
