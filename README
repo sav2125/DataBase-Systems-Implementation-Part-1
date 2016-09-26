@@ -1,0 +1,34 @@
+DBSI Project 2.1
+Team Members : 
+Shivani Gupta (sg3296)
+Siddharth Aman Varshney (sav2125)
+
+Run the code as : 
+gcc -g main.c -lm -w -o main
+./main K P 9 5 9
+
+Checked error conditions for build tree by calculating min and max keys for a given fanout configuration.
+Build Tree : 
+Set insertion flags of all levels to True
+For each key:
+	from leaf level to root level:
+		if (insertion flag == true):
+			INsert in tree
+			if (node full)
+				insertion flag = 0 for that level
+			Set insertion flag = 1 for all levels below current level
+
+Append INT_MAX based on 2 conditionts : 
+1: if (number of keys mod fanout_level-1) < fanout_level - 1
+	append INT_MAX to complete node
+2. if (lower_level node has no parent)
+	BUild parent. append INT_MAX to parent node
+
+Find range for probe : 
+
+for each probe:
+	start from root to leaf level:
+		perform binary search on current node. go to correct node in the lower level.
+	find the index in the leaf level corresponding to the given probe.
+	Map the index to the correct range.
+The end  			
